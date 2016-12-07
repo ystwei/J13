@@ -2,11 +2,14 @@ package com.weikun.dao;
 
 import com.weikun.po.Father2;
 import com.weikun.po.Son2;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/12/7.
@@ -26,13 +29,24 @@ public class FatherDAOImpl {
     @Test
     public void test(){
         ApplicationContext ctx=new ClassPathXmlApplicationContext("applicationContextHibernate.xml");
-
-
         FatherDAOImpl dao=(FatherDAOImpl)ctx.getBean("fdao");
+        dao.query();
+    }
+    public void query(){
+        Session session=this.sessionFactory.openSession();
 
-        dao.add();
+        Query q=session.createQuery("from Father2 as f");
 
+        List<Father2> list=q.list();
 
+        for(Father2 f:list){
+            System.out.println(f.getFname());
+
+        }
+
+        session.flush();
+        session.clear();
+        session.close();
     }
     public void add(){
         Session session=this.sessionFactory.openSession();
